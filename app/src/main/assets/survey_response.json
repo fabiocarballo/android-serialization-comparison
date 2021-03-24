@@ -1,0 +1,29 @@
+{
+  "id": "survey-id",
+  "pages": [
+    {
+      "title": "page-title-1",
+      "subtitle": "page-subtitle-1",
+      "questions": [
+        {
+          "id": "comment-question-1",
+          "type": "comment"
+        },
+        {
+          "id": "pills-question-1",
+          "type": "pills",
+          "options": [
+            {
+              "id": "pill-1",
+              "text": "Pill 1"
+            },
+            {
+              "id": "pill-2",
+              "text": "Pill 2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
