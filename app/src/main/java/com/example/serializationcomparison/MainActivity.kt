@@ -3,9 +3,9 @@ package com.example.serializationcomparison
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import com.example.gson.GsonDeserializer
+import com.example.kxs.KxsDeserializer
+import com.example.moshi.MoshiDeserializer
 import com.example.serializationcomparison.databinding.ActivityMainBinding
 
 @ExperimentalStdlibApi
@@ -13,7 +13,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val deserializer = GsonDeserializer()
+    private val gsonDeserializer = GsonDeserializer()
+    private val moshiDeserializer = MoshiDeserializer()
+    private val kxsDeserializer = KxsDeserializer()
+
+    private val jsonText by lazy {
+        assets.open("survey_response.json").bufferedReader()
+            .use { it.readText() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,28 +30,16 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.fab.setOnClickListener { view ->
-            val text = view.context.assets.open("survey_response.json").bufferedReader()
-                .use { it.readText() }
-            val survey = deserializer.deserialize(text)
-            Log.d("Tag", survey.toString())
+        binding.kxsButton.setOnClickListener {
+            binding.textResult.text = "Kxs: ${kxsDeserializer.deserialize(jsonText)}"
+        }
+
+        binding.gsonButton.setOnClickListener {
+            binding.textResult.text = "Gson: ${gsonDeserializer.deserialize(jsonText)}"
+        }
+
+        binding.moshiButton.setOnClickListener {
+            binding.textResult.text = "Moshi: ${moshiDeserializer.deserialize(jsonText)}"
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
 }
